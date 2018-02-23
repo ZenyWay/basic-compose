@@ -1,0 +1,43 @@
+<!--
+Copyright 2017 Stephane M. Catala
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+Limitations under the License.
+-->
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/2.9.2/xterm.min.css" integrity="sha256-w69o8Y6P5VZjfYFmn2KlqMU7TUi2I+oWObi8FLlVZZg=" crossorigin="anonymous" />
+</head>
+<body>
+  <h2>
+    <pre>`basic-compose` example</pre>
+  </h2>
+  <pre>
+import compose from '../'
+import log from './console'
+import { map, take, tap } from 'rxjs/operators'
+import { interval } from 'rxjs/observable/interval'
+import { Observable } from 'rxjs/Observable';
+
+interval(1000).pipe(
+  take(5),
+  tap(log('input:')),
+  compose<Observable<number>,Observable<string>>(
+    map((s: string) => `${s.length}${s}`),
+    map((x: number) => '.'.repeat(x)),
+    map((x: number) => 4 - x)
+  )
+)
+.subscribe(log('output:'), log('error:'), log('done'))
+  </pre>
+  <br/>
+  <div id="terminal"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/2.9.2/xterm.min.js" integrity="sha256-8rsVcpCnO6HdeJL84i0VdubjM42fjSmO8aONghdq3gc=" crossorigin="anonymous"></script>
+  <script src="./index.js" type="text/javascript"></script>
+</body>

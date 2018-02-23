@@ -1,0 +1,25 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [ "es5" ],
+    "types": [],
+    "declaration": true,
+    "sourceMap": false,
+    "noEmitHelpers": false,
+    "importHelpers": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "exclude": [
+    "dist",
+    "node_modules",
+    "spec",
+    "typings"
+  ]
+}
