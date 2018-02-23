@@ -12,7 +12,7 @@
     "example:serve": "http-server -c-1 -i -e html -o -p 6510 example",
     "preexample:bundle": "rimraf spec/example/*.js",
     "example:bundle": "browserify example/index.ts -p [ tsify --project example ] -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m > example/index.js",
-    "prepublish": "npm run dist",
+    "prepublish": "npm run test",
     "pretest": "npm run dist",
     "test": "jasmine",
     "uglify": "uglifyjs dist/index.js -c -m -o dist/index.min.js"
