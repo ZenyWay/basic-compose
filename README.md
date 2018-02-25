@@ -11,7 +11,7 @@ compose: (..., f3, f2, f1) => x => ...(f3(f2(f1(x))))
 
 # Example
 see this [example](./example/index.ts) in this directory.
-run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/v1.0.0/example/index.html).
+run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/v2.0.0/example/index.html).
 
 ```ts
 import compose from 'basic-compose'
@@ -35,6 +35,10 @@ interval(1000).pipe(
 declare function compose <I,O>(...fns: Function[]): (v: I) => O
 declare function compose <I,O>(fns: Function[]): (v: I) => O
 ```
+for a detailed specification of this API,
+in particular for handling of corner cases,
+run the [unit tests](https://cdn.rawgit.com/ZenyWay/basic-compose/v2.0.0/spec/web/index.html)
+in your browser.
 
 # TypeScript
 although this library is written in [TypeScript](https://www.typescriptlang.org),

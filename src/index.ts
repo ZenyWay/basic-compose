@@ -16,15 +16,18 @@
 export default function compose <I,O>(...fns: Function[]): (v: I) => O
 export default function compose <I,O>(fns: Function[]): (v: I) => O
 export default function compose <I,O>(): (v: I) => O {
-  const fns = arguments[0]
-	if (typeof fns === 'function') {
-		return compose(<any>arguments)
-	}
-	return function (v: I): O {
-		let r = <any>v, i = fns.length
-		while (i--) {
-			r = fns[i](r)
-		}
-		return r
-	}
+  if (arguments.length > 1) { return compose(<any>arguments) }
+  const fs = arguments[0]
+  if (!fs) { return fs }
+  // single truthy argument
+  const t = typeof fs.valueOf()
+  return (t === 'function') || (t === 'string') || (typeof fs.length !== 'number')
+    ? fs
+    : fs.length <= 1
+      ? fs[0]
+      : function (v: I): O {
+        let r = <any>v, i = fs.length
+        while (i--) { r = fs[i](r) }
+        return r
+      }
 }

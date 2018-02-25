@@ -17,38 +17,82 @@
 const compose = require('../').default
 
 describe('compose', function () {
-  describe('when called with any number of function arguments', function () {
-    let f1, f2, f3
+  describe('when called with at least two arguments, ' +
+  'or with an array-like object of at least two entries', function () {
+    const fs = createSpies(2 + 3 + 16)
+    const args = []
 
     beforeEach(function () {
-      f1 = jasmine.createSpy('f1').and.returnValue(1)
-      f2 = jasmine.createSpy('f1').and.returnValue(2)
-      f3 = jasmine.createSpy('f1').and.returnValue(3)
-      compose(f3, f2, f1)(0)
+      args.push([ fs[1], fs[0] ])
+      compose(...args[0])(0)
+      compose(args[0])(0)
+      args.push([ fs[4], fs[3], fs[2] ])
+      compose(...args[1])(2)
+      compose(args[1])(2)
+      args.push(fs.slice(5).reverse())
+      compose(...args[2])(5)
+      compose(args[2])(5)
     })
 
-    it('returns a function that recursively calls all given functions ' +
-    'from the last to the first starting with its argument', function () {
-      expect(f1).toHaveBeenCalledWith(0)
-      expect(f2).toHaveBeenCalledWith(1)
-      expect(f3).toHaveBeenCalledWith(2)
+    it('returns a function that sequentially calls all given arguments, ' +
+    'from last to first, starting with the argument of that function', function () {
+      Object.keys(fs).forEach(function (n) {
+        expect(fs[n].calls.allArgs()).toEqual([ [ Number(n) ], [ Number(n) ] ])
+      })
     })
   })
-  describe('when called with an array of functions', function () {
-    let f1, f2, f3
+
+  describe('when called with no argument or an empty array-like object', function () {
+    const res = []
 
     beforeEach(function () {
-      f1 = jasmine.createSpy('f1').and.returnValue(1)
-      f2 = jasmine.createSpy('f1').and.returnValue(2)
-      f3 = jasmine.createSpy('f1').and.returnValue(3)
-      compose([ f3, f2, f1 ])(0)
+      res.push(compose())
+      res.push(compose([]))
     })
 
-    it('returns a function that recursively calls all given functions ' +
-    'from the last to the first starting with its argument', function () {
-      expect(f1).toHaveBeenCalledWith(0)
-      expect(f2).toHaveBeenCalledWith(1)
-      expect(f3).toHaveBeenCalledWith(2)
+    it('returns undefined', function () {
+      expect(res).toEqual([ void 0, void 0 ])
+    })
+  })
+
+  describe('when called with a single falsy or non array-like argument, ' +
+  'or with a single function, or with a single string, ' +
+  'or with a single array-like object with a single entry', function () {
+    function f () {}
+    const d = Date.now()
+    const r = /.*/i
+    const o = {}
+    const args = [
+      void 0, null, false, 0, NaN, '', // falsy
+      'foo', f, // string or function
+      d, r, o // non array-like
+    ]
+
+    const res = [ [], [], [] ]
+
+    beforeEach(function () {
+      args.forEach(function (arg) {
+        res[0].push(compose(arg))
+        res[1].push(compose([ arg ]))
+      })
+      res[2].push(compose([ [ 'foo' ] ]))
+    })
+
+    it('returns that argument or entry', function () {
+      expect(res[0]).toEqual(args)
+      expect(res[1]).toEqual(args)
+      expect(res[2]).toEqual([ [ 'foo' ] ])
     })
   })
 })
+
+function createSpies (count) {
+  const fs = new Array(count)
+  let n = fs.length
+  while (n--) { fs[n] = createSpy(n) }
+  return fs
+}
+
+function createSpy (n) {
+  return jasmine.createSpy(`f${n}`).and.returnValue(n + 1)
+}

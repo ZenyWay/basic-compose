@@ -1,6 +1,6 @@
 {
   "name": "basic-compose",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "basic functional composition function",
   "main": "dist/index.min.js",
   "typings": "dist/index.d.ts",
@@ -15,6 +15,9 @@
     "prepublish": "npm run test",
     "pretest": "npm run dist",
     "test": "jasmine",
+    "test:web:serve": "http-server -c-1 -o -p 6510 spec/web",
+    "pretest:web": "rimraf spec/web/*.js && npm run dist",
+    "test:web": "browserify spec/*.spec.js -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m > spec/web/index.spec.js && npm run test:web:serve",
     "uglify": "uglifyjs dist/index.js -c -m -o dist/index.min.js"
   },
   "keywords": [
