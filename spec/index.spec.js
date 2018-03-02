@@ -30,14 +30,23 @@ describe('compose', function () {
       compose(...args[1])(2)
       compose(args[1])(2)
       args.push(fs.slice(5).reverse())
-      compose(...args[2])(5)
-      compose(args[2])(5)
+      compose(...args[2])('foo', 'bar', 5)
+      compose(args[2])('foo', 'bar', 5)
     })
 
-    it('returns a function that sequentially calls all given arguments, ' +
-    'from last to first, starting with the argument of that function', function () {
+    it('returns a function that sequentially calls all given functions, ' +
+    'from last to first. leading arguments to the resulting function ' +
+    'are passed to each function as is, the trailing argument of each function ' +
+    'being the result from the previous.', function () {
       Object.keys(fs).forEach(function (n) {
-        expect(fs[n].calls.allArgs()).toEqual([ [ Number(n) ], [ Number(n) ] ])
+        if (n < 5) {
+          expect(fs[n].calls.allArgs()).toEqual([ [ Number(n) ], [ Number(n) ] ])
+        }
+        if (n >= 5) {
+          expect(fs[n].calls.allArgs()).toEqual([
+            [ 'foo', 'bar', Number(n) ], [ 'foo', 'bar', Number(n) ]
+          ])
+        }
       })
     })
   })

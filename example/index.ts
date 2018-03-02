@@ -22,7 +22,7 @@ import { Observable } from 'rxjs/Observable';
 interval(1000).pipe(
   take(5),
   tap(log('input:')),
-  compose<Observable<number>,Observable<string>>(
+  compose<Observable<string>>(
     map((s: string) => `${s.length}${s}`),
     map((x: number) => '.'.repeat(x)),
     map((x: number) => 4 - x)

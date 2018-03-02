@@ -13,9 +13,9 @@
  * Limitations under the License.
  */
 ;
-export default function compose <I,O>(...fns: Function[]): (v: I) => O
-export default function compose <I,O>(fns: Function[]): (v: I) => O
-export default function compose <I,O>(): (v: I) => O {
+export default function compose <O>(...fns: Function[]): (...args: any[]) => O
+export default function compose <O>(fns: Function[]): (...args: any[]) => O
+export default function compose <O>(): (...args: any[]) => O {
   if (arguments.length > 1) { return compose(<any>arguments) }
   const fs = arguments[0]
   if (!fs) { return fs }
@@ -25,9 +25,13 @@ export default function compose <I,O>(): (v: I) => O {
     ? fs
     : fs.length <= 1
       ? fs[0]
-      : function (v: I): O {
-        let r = <any>v, i = fs.length
-        while (i--) { r = fs[i](r) }
-        return r
+      : function (): O {
+        const args = []
+        let i = arguments.length
+        const r = i - 1
+        while (i--) { args[i] = arguments[i] }
+        i = fs.length
+        while (i--) { args[r] = fs[i].apply(void 0, args) }
+        return args[r]
       }
 }
