@@ -13,25 +13,39 @@
  * Limitations under the License.
  */
 ;
-export default function compose <O>(...fns: Function[]): (...args: any[]) => O
-export default function compose <O>(fns: Function[]): (...args: any[]) => O
-export default function compose <O>(): (...args: any[]) => O {
-  if (arguments.length > 1) { return compose(<any>arguments) }
-  const fs = arguments[0]
-  if (!fs) { return fs }
-  // single truthy argument
-  const t = typeof fs.valueOf()
-  return (t === 'function') || (t === 'string') || (typeof fs.length !== 'number')
-    ? fs
-    : fs.length <= 1
-      ? fs[0]
-      : function (): O {
-        const args = []
-        let i = arguments.length
-        const r = i - 1
-        while (i--) { args[i] = arguments[i] }
-        i = fs.length
-        while (i--) { args[r] = fs[i].apply(void 0, args) }
-        return args[r]
-      }
+export default function createCompose(
+  into: (length: number) => number = last
+) {
+  return compose
+
+  function compose <O>(...fns: Function[]): (...args: any[]) => O
+  function compose <O>(fns: Function[]): (...args: any[]) => O
+  function compose <O>(): (...args: any[]) => O {
+    if (arguments.length > 1) { return compose(<any>arguments) }
+    const fs = arguments[0]
+    if (!fs) { return fs }
+    // single truthy argument
+    const t = typeof fs.valueOf()
+    return (t === 'function') || (t === 'string') || (typeof fs.length !== 'number')
+      ? fs
+      : fs.length <= 1
+        ? fs[0]
+        : function (): O {
+          let i = arguments.length
+          const r = clamp(i, into(i))
+          const args = new Array(i)
+          while (i--) { args[i] = arguments[i] }
+          i = fs.length
+          while (i--) { args[r] = fs[i].apply(void 0, args) }
+          return args[r]
+        }
+  }
+}
+
+function clamp (max: number, v: number): number {
+  return v < max ? (v < 0 ? 0 : v) : max
+}
+
+function last (length: number): number {
+  return length - 1
 }
