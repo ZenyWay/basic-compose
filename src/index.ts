@@ -13,10 +13,17 @@
  * Limitations under the License.
  */
 ;
-export default function createCompose(
-  into: (length: number) => number = last
-) {
-  return compose
+export default createCompose()
+
+export interface Composer {
+  <O>(...fns: Function[]): (...args: any[]) => O
+  <O>(fns: Function[]): (...args: any[]) => O
+  into (offset: number): Composer
+}
+
+function createCompose (offset: number = -1): Composer {
+  (<Composer>compose).into = createCompose
+  return compose as Composer
 
   function compose <O>(...fns: Function[]): (...args: any[]) => O
   function compose <O>(fns: Function[]): (...args: any[]) => O
@@ -32,7 +39,7 @@ export default function createCompose(
         ? fs[0]
         : function (): O {
           let i = arguments.length
-          const r = clamp(i, into(i))
+          const r = clamp(i - 1, index(i, offset))
           const args = new Array(i)
           while (i--) { args[i] = arguments[i] }
           i = fs.length
@@ -40,12 +47,12 @@ export default function createCompose(
           return args[r]
         }
   }
+
 }
 
+function index (len: number, offset: number): number {
+  return offset < 0 ? len + offset : offset
+}
 function clamp (max: number, v: number): number {
   return v < max ? (v < 0 ? 0 : v) : max
-}
-
-function last (length: number): number {
-  return length - 1
 }

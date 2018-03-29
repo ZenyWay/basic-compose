@@ -1,7 +1,7 @@
 # basic-compose
 [![NPM](https://nodei.co/npm/basic-compose.png?compact=true)](https://nodei.co/npm/basic-compose/)
 
-basic functional composition function. 351 ES5 bytes gziped.
+basic functional composition function. 366 ES5 bytes gziped.
 
 returns a function that sequentially calls all given functions
 from last to first:
@@ -25,20 +25,19 @@ reducer(previous, current) ===
 
 alternatively, it is possible to define into which argument of each function
 the result from the previous function is injected,
-by calling the `compose` factory exposed by this module with a function
-that takes a length of arguments and returns an index.
+by calling `compose.into` with a corresponding offset: positive from index zero,
+negative from the length of the arguments to the composed function.
 see the [API section](#API) below for more details.
 
 # Example
 see this [example](./example/index.ts) in this directory.
-run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/v3.0.0/example/index.html).
+run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.0/example/index.html).
 
 ```ts
-import getCompose from 'basic-compose'
+import compose from 'basic-compose'
 import { map, take, tap } from 'rxjs/operators'
 import { interval } from 'rxjs/observable/interval'
 import { Observable } from 'rxjs/Observable';
-const compose = getCompose()
 
 interval(1000).pipe(
   take(5),
@@ -53,14 +52,17 @@ interval(1000).pipe(
 ```
 # API
 ```ts
-export default function createCompose(into?: (length: number) => number): {
+declare const compose: Composer
+export default compose
+export interface Composer {
     <O>(...fns: Function[]): (...args: any[]) => O
     <O>(fns: Function[]): (...args: any[]) => O
+    into(offset: number): Composer
 }
 ```
 for a detailed specification of this API,
 in particular for handling of corner cases,
-run the [unit tests](https://cdn.rawgit.com/ZenyWay/basic-compose/v3.0.0/spec/web/index.html)
+run the [unit tests](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.0/spec/web/index.html)
 in your browser.
 
 # TypeScript

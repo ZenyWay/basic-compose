@@ -13,12 +13,11 @@
  * Limitations under the License.
  */
 ;
-import getCompose from '../'
+import compose from '../'
 import log from './console'
 import { map, take, tap } from 'rxjs/operators'
 import { interval } from 'rxjs/observable/interval'
 import { Observable } from 'rxjs/Observable';
-const compose = getCompose()
 
 interval(1000).pipe(
   take(5),

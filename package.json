@@ -1,6 +1,6 @@
 {
   "name": "basic-compose",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "basic functional composition function",
   "main": "dist/index.min.js",
   "typings": "dist/index.d.ts",
