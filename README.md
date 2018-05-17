@@ -31,7 +31,7 @@ see the [API section](#API) below for more details.
 
 # Example
 see this [example](./example/index.ts) in this directory.
-run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.0/example/index.html).
+run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.1/example/index.html).
 
 ```ts
 import compose from 'basic-compose'
@@ -62,7 +62,7 @@ export interface Composer {
 ```
 for a detailed specification of this API,
 in particular for handling of corner cases,
-run the [unit tests](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.0/spec/web/index.html)
+run the [unit tests](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.1/spec/web/index.html)
 in your browser.
 
 # TypeScript

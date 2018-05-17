@@ -15,9 +15,8 @@
 ;
 import compose from '../'
 import log from './console'
+import { Observable, interval } from 'rxjs'
 import { map, take, tap } from 'rxjs/operators'
-import { interval } from 'rxjs/observable/interval'
-import { Observable } from 'rxjs/Observable';
 
 interval(1000).pipe(
   take(5),

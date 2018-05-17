@@ -1,6 +1,6 @@
 {
   "name": "basic-compose",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "basic functional composition function",
   "main": "dist/index.min.js",
   "typings": "dist/index.d.ts",
@@ -11,14 +11,14 @@
     "example": "npm run example:bundle && npm run example:serve",
     "example:serve": "http-server -c-1 -i -e html -o -p 6510 example",
     "preexample:bundle": "rimraf spec/example/*.js",
-    "example:bundle": "browserify example/index.ts -p [ tsify --project example ] -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m > example/index.js",
+    "example:bundle": "browserify example/index.ts -p [ tsify --project example ] -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m toplevel -o example/index.js",
     "prepublish": "npm run test",
     "pretest": "npm run dist",
     "test": "jasmine",
     "test:web:serve": "http-server -c-1 -o -p 6510 spec/web",
     "pretest:web": "rimraf spec/web/*.js && npm run dist",
-    "test:web": "browserify spec/*.spec.js -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m > spec/web/index.spec.js && npm run test:web:serve",
-    "uglify": "uglifyjs dist/index.js -c -m -o dist/index.min.js"
+    "test:web": "browserify spec/*.spec.js -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m toplevel -o spec/web/index.spec.js && npm run test:web:serve",
+    "uglify": "uglifyjs dist/index.js -c -m toplevel -o dist/index.min.js"
   },
   "keywords": [
     "cursor",
@@ -39,21 +39,19 @@
   },
   "homepage": "https://github.com/zenyway/basic-compose#readme",
   "devDependencies": {
-    "@types/xterm": "^3.0.0",
-    "browserify": "^16.1.0",
+    "browserify": "^16.2.2",
     "bundle-collapser": "^1.3.0",
-    "clipboard-copy": "^1.4.2",
-    "common-shakeify": "^0.4.5",
+    "common-shakeify": "^0.4.6",
     "http-server": "^0.11.1",
-    "jasmine": "^3.0.0",
+    "jasmine": "^3.1.0",
     "rimraf": "^2.6.2",
-    "rxjs": "^5.5.6",
-    "tsify": "^3.0.4",
-    "tslint": "^5.9.1",
-    "typescript": "^2.7.2",
-    "uglify-es": "^3.3.10",
-    "uglifyify": "^4.0.5",
-    "xterm": "^3.1.0"
+    "rxjs": "^6.1.0",
+    "tsify": "^4.0.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.3",
+    "uglify-es": "^3.3.9",
+    "uglifyify": "^5.0.0",
+    "xterm": "^3.3.0"
   },
   "dependencies": {}
 }
