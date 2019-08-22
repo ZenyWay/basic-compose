@@ -4,14 +4,17 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": [ "es2015", "dom" ],
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "types": [],
     "declaration": true,
     "sourceMap": true,
     "noEmitHelpers": false,
     "importHelpers": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": false,
     "removeComments": false,
     "noImplicitAny": false
   },

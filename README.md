@@ -1,33 +1,23 @@
 # basic-compose
 [![NPM](https://nodei.co/npm/basic-compose.png?compact=true)](https://nodei.co/npm/basic-compose/)
 
-basic functional composition function. 366 ES5 bytes gziped.
+basic functional composition function. 214 ES5 bytes gziped.
 
 returns a function that sequentially calls all given functions
 from last to first:
 ```js
-compose: (..., f3, f2, f1) => {
-  x => ...(f3(f2(f1(x))))
-  (...c, x) => compose(..., f3.curry(...c), f2.curry(...c), f1.curry(...c))(x)
-}
+compose: (..., f3, f2, f1) =>
+  (x, ...r) => ...(f3(f2(f1(x, ...r), ...r), ...r), ...r)
 ```
-by default, when the composed function is called
-with more than one argument `(...c, x)`,
-it acts as if all given functions had been curried
-with the leading context arguments `...c`,
-without the overhead of actually currying each function.
+the composed function may be called with more than one argument `(x, ...r)`:
+in that case, as described above, the rest arguments `...r` are applied
+unchanged to each function.
 this is useful, e.g. for composing reducers:
 ```js
 const reducer = compose(reducerC, reducerB, reducerA)
-reducer(previous, current) ===
-  reducerC(previous, reducerB(previous, reducerA(previous, current)))
+reducer(previous, action) ===
+  reducerC(reducerB(reducerA(previous, action), action), action)
 ```
-
-alternatively, it is possible to define into which argument of each function
-the result from the previous function is injected,
-by calling `compose.into` with a corresponding offset: positive from index zero,
-negative from the length of the arguments to the composed function.
-see the [API section](#API) below for more details.
 
 # Example
 see this [example](./example/index.ts) in this directory.
@@ -35,33 +25,126 @@ run this example [in your browser](https://cdn.rawgit.com/ZenyWay/basic-compose/
 
 ```ts
 import compose from 'basic-compose'
-import { map, take, tap } from 'rxjs/operators'
-import { interval } from 'rxjs/observable/interval'
-import { Observable } from 'rxjs/Observable';
+import log from './console'
+const tap = fn => v => (fn(v), v)
 
-interval(1000).pipe(
-  take(5),
-  tap(log('input:')),
-  compose<Observable<string>>(
-    map((s: string) => `${s.length}${s}`),
-    map((x: number) => '.'.repeat(x)),
-    map((x: number) => 4 - x)
-  )
+const f = compose(
+  tap(log('output:')),
+  (s: string) => `${s.length}${s}`,
+  (x: number) => '.'.repeat(x),
+  x => 4 - x,
+  tap(log('input:'))
 )
-.subscribe(log('output:'), log('error:'), log('done'))
+
+;[0, 1, 2, 3, 4].forEach(f)
 ```
+
 # API
 ```ts
-declare const compose: Composer
-export default compose
-export interface Composer {
-    <O>(...fns: Function[]): (...args: any[]) => O
-    <O>(fns: Function[]): (...args: any[]) => O
-    into(offset: number): Composer
-}
+export default compose;
+declare function compose<A extends any[] = []>(
+  ...fn: []
+): <U>(v?: U, ...args: A) => U;
+declare function compose<B, A extends any[] = []>(
+  ...fn: []
+): (v?: B, ...args: A) => B;
+declare function compose<C, B = C, A extends any[] = []>(
+  ...fn: [(v?: B, ...args: A) => C]
+): (v?: B, ...args: A) => C;
+declare function compose<D, C = D, B = C, A extends any[] = []>(
+  ...fn: [
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => D;
+declare function compose<E, D = E, C = D, B = C, A extends any[] = []>(
+  ...fn: [
+    (v?: D, ...args: A) => E,
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => E;
+declare function compose<F, E = F, D = E, C = D, B = C, A extends any[] = []>(
+  ...fn: [
+    (v?: E, ...args: A) => F,
+    (v?: D, ...args: A) => E,
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => F;
+declare function compose<
+  G, F = G, E = F, D = E, C = D, B = C,
+  A extends any[] = []
+>(
+  ...fn: [
+    (v?: F, ...args: A) => G,
+    (v?: E, ...args: A) => F,
+    (v?: D, ...args: A) => E,
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => G;
+declare function compose<
+  H, G = H, F = G, E = F, D = E, C = D, B = C,
+  A extends any[] = []
+>(
+  ...fn: [
+    (v?: G, ...args: A) => H,
+    (v?: F, ...args: A) => G,
+    (v?: E, ...args: A) => F,
+    (v?: D, ...args: A) => E,
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => H;
+declare function compose<
+  I, H = I, G = H, F = G, E = F, D = E, C = D, B = C,
+  A extends any[] = []
+>(
+  ...fn: [
+    (v?: H, ...args: A) => I,
+    (v?: G, ...args: A) => H,
+    (v?: F, ...args: A) => G,
+    (v?: E, ...args: A) => F,
+    (v?: D, ...args: A) => E,
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => I;
+declare function compose<
+  J, I = J, H = I, G = H, F = G, E = F, D = E, C = D, B = C,
+  A extends any[] = []
+>(
+  ...fn: [
+    (v?: I, ...args: A) => J,
+    (v?: H, ...args: A) => I,
+    (v?: G, ...args: A) => H,
+    (v?: F, ...args: A) => G,
+    (v?: E, ...args: A) => F,
+    (v?: D, ...args: A) => E,
+    (v?: C, ...args: A) => D,
+    (v?: B, ...args: A) => C
+  ]
+): (v?: B, ...args: A) => J;
+declare function compose<
+  J, I = J, H = I, G = H, F = G, E = F, D = E, C = D, B = C,
+  A extends any[] = []
+>(
+  f7: (v?: I, ...args: A) => J,
+  f6: (v?: H, ...args: A) => I,
+  f5: (v?: G, ...args: A) => H,
+  f4: (v?: F, ...args: A) => G,
+  f3: (v?: E, ...args: A) => F,
+  f2: (v?: D, ...args: A) => E,
+  f1: (v?: C, ...args: A) => D,
+  f0: (v?: B, ...args: A) => C,
+  ...fn: ((v?: any, ...args: A) => any)[]
+): (v?: any, ...args: A) => J;
 ```
+the current type definition provides strong typing
+for up to eight composed functions, and relaxed typing beyond.
+
 for a detailed specification of this API,
-in particular for handling of corner cases,
 run the [unit tests](https://cdn.rawgit.com/ZenyWay/basic-compose/v4.0.1/spec/web/index.html)
 in your browser.
 
@@ -72,7 +155,7 @@ modern code editors will still benefit from the available type definition,
 e.g. for helpful code completion.
 
 # License
-Copyright 2018 Stéphane M. Catala
+Copyright 2019 Stéphane M. Catala
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

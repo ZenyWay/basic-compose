@@ -4,14 +4,16 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": [ "es5" ],
+    "lib": [
+      "es5"
+    ],
     "types": [],
     "declaration": true,
     "sourceMap": false,
     "noEmitHelpers": false,
     "importHelpers": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": false,
     "removeComments": true,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true

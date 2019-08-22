@@ -1,6 +1,6 @@
 {
   "name": "basic-compose",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "basic functional composition function",
   "main": "dist/index.min.js",
   "typings": "dist/index.d.ts",
@@ -10,15 +10,16 @@
     "postdist": "npm run uglify",
     "example": "npm run example:bundle && npm run example:serve",
     "example:serve": "http-server -c-1 -i -e html -o -p 6510 example",
+    "format": "prettier-standard \"{bin,example,src,spec}/**/*.[jt]@(s|sx)\"",
     "preexample:bundle": "rimraf spec/example/*.js",
-    "example:bundle": "browserify example/index.ts -p [ tsify --project example ] -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m toplevel -o example/index.js",
+    "example:bundle": "browserify example/index.ts -p [ tsify --project example ] -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | terser -c -m --toplevel -o example/index.js",
     "prepublish": "npm run test",
     "pretest": "npm run dist",
     "test": "jasmine",
     "test:web:serve": "http-server -c-1 -o -p 6510 spec/web",
     "pretest:web": "rimraf spec/web/*.js && npm run dist",
-    "test:web": "browserify spec/*.spec.js -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | uglifyjs -c -m toplevel -o spec/web/index.spec.js && npm run test:web:serve",
-    "uglify": "uglifyjs dist/index.js -c -m toplevel -o dist/index.min.js"
+    "test:web": "browserify spec/*.spec.js -g uglifyify -p bundle-collapser/plugin -p [ common-shakeify -v ] | terser -c -m toplevel -o spec/web/index.spec.js && npm run test:web:serve",
+    "uglify": "terser dist/index.js -c -m --toplevel -o dist/index.min.js"
   },
   "keywords": [
     "cursor",
@@ -39,19 +40,22 @@
   },
   "homepage": "https://github.com/zenyway/basic-compose#readme",
   "devDependencies": {
-    "browserify": "^16.2.2",
-    "bundle-collapser": "^1.3.0",
-    "common-shakeify": "^0.4.6",
-    "http-server": "^0.11.1",
-    "jasmine": "^3.1.0",
-    "rimraf": "^2.6.2",
-    "rxjs": "^6.1.0",
-    "tsify": "^4.0.0",
-    "tslint": "^5.10.0",
-    "typescript": "^2.8.3",
-    "uglify-es": "^3.3.9",
-    "uglifyify": "^5.0.0",
-    "xterm": "^3.3.0"
+    "@typescript-eslint/eslint-plugin": "2.0.0",
+    "@typescript-eslint/parser": "2.0.0",
+    "browserify": "16.5.0",
+    "bundle-collapser": "1.3.0",
+    "common-shakeify": "0.4.6",
+    "http-server": "0.11.1",
+    "jasmine": "3.4.0",
+    "lint-staged": "9.2.3",
+    "prettier-standard": "9.1.1",
+    "rimraf": "3.0.0",
+    "standard": "14.0.0",
+    "terser": "4.2.0",
+    "tsify": "4.0.1",
+    "typescript": "3.5.3",
+    "uglifyify": "5.0.2",
+    "xterm": "3.14.5"
   },
   "dependencies": {}
 }

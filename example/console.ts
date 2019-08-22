@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2018 Stephane M. Catala
+ * Copyright 2019 Stephane M. Catala
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * Limitations under the License.
  */
-;
 declare const Terminal: any
 
 const term = new Terminal({

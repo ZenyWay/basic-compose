@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2018 Stephane M. Catala
+ * Copyright 2019 Stephane M. Catala
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,19 +12,16 @@
  * See the License for the specific language governing permissions and
  * Limitations under the License.
  */
-;
 import compose from '../'
 import log from './console'
-import { Observable, interval } from 'rxjs'
-import { map, take, tap } from 'rxjs/operators'
+const tap = fn => v => (fn(v), v)
 
-interval(1000).pipe(
-  take(5),
-  tap(log('input:')),
-  compose<Observable<string>>(
-    map((s: string) => `${s.length}${s}`),
-    map((x: number) => '.'.repeat(x)),
-    map((x: number) => 4 - x)
-  )
+const f = compose(
+  tap(log('output:')),
+  (s: string) => `${s.length}${s}`,
+  (x: number) => '.'.repeat(x),
+  x => 4 - x,
+  tap(log('input:'))
 )
-.subscribe(log('output:'), log('error:'), log('done'))
+
+  ;[0, 1, 2, 3, 4].forEach(f)
